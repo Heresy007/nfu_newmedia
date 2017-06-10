@@ -1,0 +1,46 @@
+import json, urllib
+from urllib import urlencode
+def main():
+  
+    #配置您申请的APPKey
+    appkey = "*********************"
+  
+    #1.经纬度转换
+    request1(appkey,"GET")
+  
+  
+  
+#经纬度转换
+def request1(appkey, m="GET"):
+    url = "http://v.juhe.cn/offset/index"
+    params = {
+        "lng" : "", #经度,如：116.3974965092
+        "lat" : "", #纬度,如：39.908700982285396
+        "type" : "", #转换类型，1：GPS-&gt;百度， 2: 百度-&gt;GPS ，3:GPS-&gt;谷歌， 4:谷歌-&gt;GPS&lt;br/&gt;     5:百度-&gt;谷歌 ，6:谷歌-&gt;百度
+        "dtype" : "", #返回数据格式：json或xml或jsonp,默认json
+        "callback" : "", #返回格式选择jsonp时，必须传递
+        "key" : appkey, #你申请的key
+  
+    }
+    params = urlencode(params)
+    if m =="GET":
+        f = urllib.urlopen("%s?%s" % (url, params))
+    else:
+        f = urllib.urlopen(url, params)
+  
+    content = f.read()
+    res = json.loads(content)
+    if res:
+        error_code = res["error_code"]
+        if error_code == 0:
+            #成功请求
+            print res["result"]
+        else:
+            print "%s:%s" % (res["error_code"],res["reason"])
+    else:
+        print "request api error"
+  
+  
+  
+if __name__ == '__main__':
+    main()
